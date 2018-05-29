@@ -3,14 +3,14 @@
     <h2>{{title}}</h2>
     <el-form>
       <div v-for="(item, index) of list" :key="index" class="container">
-        <div class="icon-wrapper" @click="close(index)">
+        <div v-if="list.length > 1" class="icon-wrapper" @click="close(index)">
           <svg class="icon" aria-hidden="true">
             <use v-bind:xlink:href="`#icon-close`"></use>
           </svg>
         </div>
-        <el-form-item :label="labels[key] || key" v-for="(key, index) of keys" :key="index">
+        <el-form-item :label="labels[key] || key" v-for="(key, i) of keys" :key="i">
           <div class="pannel-input">
-            <el-input v-model="item[key]"></el-input>
+            <el-input v-model="item[key]"/>
           </div>
         </el-form-item>
       </div>
@@ -42,6 +42,12 @@ export default {
     },
     close (index) {
       this.list.splice(index, 1)
+    },
+    changeResumeField (path, value) {
+      this.$store.commit('updateResume', {
+        path,
+        value
+      })
     }
   }
 }

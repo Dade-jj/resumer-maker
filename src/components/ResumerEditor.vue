@@ -2,9 +2,9 @@
   <div id="editor">
     <nav>
       <ul>
-        <li v-for="(item, index) of resume.icons" :class="{active:currentTab == index}" :key="index" @click="currentTab = index">
+        <li v-for="(item, index) of resume.config" :class="{active:currentTab == index}" :key="index" @click="currentTab = index">
           <svg class="icon" aria-hidden="true">
-            <use v-bind:xlink:href="`#icon-${resume.icons[index]}`"></use>
+            <use v-bind:xlink:href="`#icon-${resume.config[index].icon}`"></use>
           </svg>
         </li>
       </ul>
@@ -26,21 +26,7 @@
         <array-editor :list="resume.awardtHistory" title="获奖经历" :labels="{name: '奖励详情'}"></array-editor>
       </li>
       <li :class="{active:currentTab == 5}">
-        <h2>联系方式</h2>
-        <el-form>
-          <el-form-item label="QQ">
-            <el-input v-model="resume.contact.qq"></el-input>
-          </el-form-item>
-          <el-form-item label="微信">
-            <el-input v-model="resume.contact.weixin"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱">
-            <el-input v-model="resume.contact.email"></el-input>
-          </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="resume.contact.phone"></el-input>
-          </el-form-item>
-        </el-form>
+        <array-editor :list="resume.contacts" title="联系方式" :labels="{contact: 'contact', content: ''}"></array-editor>
       </li>
     </ul>
   </div>
@@ -57,13 +43,11 @@ export default {
       currentTab: 0
     }
   },
-  props: {
-    resume: Object
-  },
-  methods: {
-  },
   components: {
     ProfileEditor, ArrayEditor
+  },
+  props: {
+    resume: Object
   }
 }
 </script>

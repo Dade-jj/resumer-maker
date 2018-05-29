@@ -11,7 +11,7 @@
         <el-input v-model="profile.city"></el-input>
       </el-form-item>
       <el-form-item label="年龄">
-        <el-input v-model="profile.age"></el-input>
+        <el-input v-model="profile.birthday"></el-input>
       </el-form-item>
     </el-form>
   </div>

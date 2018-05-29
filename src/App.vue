@@ -15,42 +15,13 @@
 import ResumerHeader from './components/ResumerHeader'
 import ResumerEditor from './components/ResumerEditor'
 import ResumerPreview from './components/ResumerPreview'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
   data () {
     return {
-      preivewMode: false,
-      resume: {
-        icons: ['credentials_icon', 'work', 'book', 'heart', 'cup', 'phone'],
-        profile: {
-          name: '',
-          city: '',
-          age: ''
-        },
-        workHistory: [{
-          company: '',
-          content: ''
-        }],
-        studyHistory: [{
-          school: '',
-          duration: '',
-          degree: ''
-        }],
-        projects: [{
-          name: '',
-          content: ''
-        }],
-        awardtHistory: [{
-          name: ''
-        }],
-        contact: {
-          qq: '',
-          weixin: '',
-          email: '',
-          phone: ''
-        }
-      }
+      preivewMode: false
     }
   },
   components: {
@@ -63,11 +34,16 @@ export default {
     exitPreview () {
       this.preivewMode = false
     }
+  },
+  computed: {
+    ...mapState({
+      resume: 'resume'
+    })
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
   body, html {
     height: 100%;
   }
@@ -79,10 +55,6 @@ export default {
     height: 100%;
   }
 
-  header {
-    min-width: 1024px;
-  }
-
   #app main {
     display: flex;
     flex: 1;
@@ -90,10 +62,12 @@ export default {
     min-width: 1024px;
     padding: 16px;
     background: #ddd;
+    transition: all 3s;
   }
 
   #header {
     position: relative;
+    min-width: 1024px;
     z-index: 1;
   }
 
@@ -108,6 +82,7 @@ export default {
 
   #preview {
     flex: 1;
+    overflow: auto;
     height: 100%;
     background: #fff;
     margin-left: 16px;
