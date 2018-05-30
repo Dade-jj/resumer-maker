@@ -13,13 +13,18 @@
       <li v-for="(item, index) in resume.config" v-show="item.field === selected" :key="index">
         <div v-if="isArray(resume[item.field])">
           <div class="subitem" v-for="(subitem, i) in resume[item.field]" :key="i">
+            <div v-if="resume[item.field].length > 1" class="icon-wrapper" @click="removeItem(item, i)">
+              <svg class="icon" aria-hidden="true">
+                <use v-bind:xlink:href="`#icon-close`"></use>
+              </svg>
+            </div>
             <div class="resumeField" v-for="(value, key, index) in subitem" :key="index">
               <label>{{key}}</label>
               <input type="text" :value="value" @input="changeResumeField(`${item.field}.${i}.${key}`, $event.target.value)">
             </div>
             <hr>
           </div>
-          <!-- <el-button type="success" class="button" @click="addItem" plain>新增</el-button> -->
+          <el-button type="success" class="button" @click="addItem(item)" plain>新增</el-button>
         </div>
         <div v-else class="resumeField" v-for="(value, key) in resume[item.field]" :key="key">
           <label>{{key}}</label>
@@ -69,6 +74,22 @@ export default {
         path,
         value
       })
+    },
+    addItem (item) {
+      const object = {}
+      Object.keys(this.resume[item.field][0]).map((key) => {
+        object[key] = ''
+      })
+      this.$store.commit('addItem', {
+        item,
+        object
+      })
+    },
+    removeItem (item, index) {
+      this.$store.commit('removeItem', {
+        item,
+        index
+      })
     }
   }
 }
@@ -80,7 +101,6 @@ export default {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: row;
-  overflow: auto;
   nav {
     width: 80px;
     background: black;
@@ -103,9 +123,14 @@ export default {
     }
   }
   .pannels {
+    overflow: auto;
     flex-grow: 1;
     li {
       padding: 24px;
+      .icon-wrapper .icon{
+        float: right;
+        fill: #000;
+      }
     }
   }
   svg.icon {
@@ -113,9 +138,6 @@ export default {
     height: 24px;
     fill: #fff;
   }
-}
-ul {
-  list-style: none;
 }
 .resumeField {
   label {

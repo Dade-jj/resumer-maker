@@ -17,5 +17,11 @@ export default {
   },
   removeUser (state) {
     state.user.id = ''
+  },
+  addItem (state, {item, object}) {
+    state.resume[item.field].push(object)
+  },
+  removeItem (state, {item, index}) {
+    state.resume[item.field].splice(index, 1)
   }
 }
