@@ -2,21 +2,20 @@
   <div id="header">
     <span class="title">VueResumer</span>
     <div class="actions">
-      <div v-if="!logined" class="user-actions">
+      <div v-if="logined" class="user-actions">
         <span class="welcome">你好,{{user.username}}</span>
         <el-button class="button" @click.prevent="signOut">登出</el-button>
       </div>
       <div v-else class="user-actions">
         <el-button type="primary" href="#" class="button primary" @click.prevent="signUpDialogVisible = true">注册</el-button>
         <MyDialog title="注册" v-show="signUpDialogVisible" @close="signUpDialogVisible = false">
-          <SignUpForm @success="signIn($event)"/>
+          <SignUpForm @success="login($event)"/>
         </MyDialog>
         <el-button class="button" @click.prevent="signInDialogVisible = true" href="#" >登录</el-button>
         <MyDialog title="登录" v-show="signInDialogVisible" @close="signInDialogVisible = false">
-          <SignInForm @success="signIn($event)" />
+          <SignInForm @success="login($event)" />
         </MyDialog>
       </div>
-      <el-button type="success" class="save">保存</el-button>
       <el-button type="success" @click="handlePreview" class="preview">预览</el-button>
     </div>
   </div>
@@ -43,17 +42,22 @@ export default {
     handlePreview () {
       this.$emit('preview')
     },
-    logined () {
-      return this.user.id
-    },
     signOut () {
       AV.User.logOut()
       this.$store.commit('removeUser')
+    },
+    login (user) {
+      this.signUpDialogVisible = false
+      this.signInDialogVisible = false
+      this.$store.commit('setUser', user)
     }
   },
   computed: {
     user () {
       return this.$store.state.user
+    },
+    logined () {
+      return this.user.id
     }
   }
 }

@@ -5,13 +5,13 @@
         <svg class="icon" aria-hidden="true">
           <use v-bind:xlink:href="`#icon-xingmingyonghumingnicheng`"></use>
         </svg>
-        <input type="text" placeholder="用户名" v-model="formData.username" required>
+        <input type="text" placeholder="用户名" v-model="formData.username">
       </div>
       <div class="row">
         <svg class="icon" aria-hidden="true">
           <use v-bind:xlink:href="`#icon-mima1`"></use>
         </svg>
-        <input type="password" placeholder="密码" v-model="formData.password" required>
+        <input type="password" placeholder="密码" v-model="formData.password">
       </div>
       <div class="actions">
         <button type="submit">登陆</button>

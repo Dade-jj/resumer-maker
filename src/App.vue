@@ -4,8 +4,8 @@
       <resumer-header @preview="preview"></resumer-header>
     </header>
     <main>
-      <resumer-editor :resume="resume"></resumer-editor>
-      <resumer-preview :resume="resume"></resumer-preview>
+      <resumer-editor></resumer-editor>
+      <resumer-preview></resumer-preview>
     </main>
     <el-button type="success" @click="exitPreview" id="exitPreview">退出预览</el-button>
   </div>
@@ -15,7 +15,7 @@
 import ResumerHeader from './components/ResumerHeader'
 import ResumerEditor from './components/ResumerEditor'
 import ResumerPreview from './components/ResumerPreview'
-import { mapState } from 'vuex'
+import getAVUser from './lib/getAVUser'
 
 export default {
   name: 'App',
@@ -35,10 +35,13 @@ export default {
       this.preivewMode = false
     }
   },
-  computed: {
-    ...mapState({
-      resume: 'resume'
-    })
+  mounted () {
+    let state = localStorage.getItem('state')
+    if (state) {
+      state = JSON.parse(state)
+    }
+    this.$store.commit('initState', state)
+    this.$store.commit('setUser', getAVUser())
   }
 }
 </script>
@@ -91,7 +94,7 @@ export default {
   .previewMode header {
     display: none;
   }
-  .previewMode #editor {
+  .previewMode main #editor {
     display: none;
   }
   .previewMode #preview {

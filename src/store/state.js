@@ -1,5 +1,5 @@
 export default {
-  selected: 'workHistory',
+  selected: 'profile',
   user: {
     id: '',
     username: ''

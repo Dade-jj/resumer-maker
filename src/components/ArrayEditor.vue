@@ -10,7 +10,7 @@
         </div>
         <el-form-item :label="labels[key] || key" v-for="(key, i) of keys" :key="i">
           <div class="pannel-input">
-            <el-input v-model="item[key]"/>
+            <el-input :value="value" @inputr.native="print"/>
           </div>
         </el-form-item>
       </div>

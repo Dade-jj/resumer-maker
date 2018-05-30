@@ -2,7 +2,7 @@
   <div id="editor">
     <nav>
       <ul>
-        <li v-for="(item, index) of resume.config" :class="{active:currentTab == index}" :key="index" @click="currentTab = index">
+        <li v-for="(item, index) of resume.config" :class="{active: item.field == selected}" :key="index" @click="selected = item.field">
           <svg class="icon" aria-hidden="true">
             <use v-bind:xlink:href="`#icon-${resume.config[index].icon}`"></use>
           </svg>
@@ -10,23 +10,21 @@
       </ul>
     </nav>
     <ul class="pannels">
-      <li :class="{active:currentTab == 0}">
-        <profile-editor :profile="resume.profile"></profile-editor>
-      </li>
-      <li :class="{active:currentTab == 1}">
-        <array-editor :list="resume.workHistory" title="工作经历" :labels="{company: '公司', content: '内容'}"></array-editor>
-      </li>
-      <li :class="{active:currentTab == 2}">
-        <array-editor :list="resume.studyHistory" title="教育经历" :labels="{school: '学校', duration: '时间', degree: '学位'}"></array-editor>
-      </li>
-      <li :class="{active:currentTab == 3}">
-        <array-editor :list="resume.projects" title="项目经历" :labels="{name: '项目名称', content: '项目内容'}"></array-editor>
-      </li>
-      <li :class="{active:currentTab == 4}">
-        <array-editor :list="resume.awardtHistory" title="获奖经历" :labels="{name: '奖励详情'}"></array-editor>
-      </li>
-      <li :class="{active:currentTab == 5}">
-        <array-editor :list="resume.contacts" title="联系方式" :labels="{contact: 'contact', content: ''}"></array-editor>
+      <li v-for="(item, index) in resume.config" v-show="item.field === selected" :key="index">
+        <div v-if="isArray(resume[item.field])">
+          <div class="subitem" v-for="(subitem, i) in resume[item.field]" :key="i">
+            <div class="resumeField" v-for="(value, key, index) in subitem" :key="index">
+              <label>{{key}}</label>
+              <input type="text" :value="value" @input="changeResumeField(`${item.field}.${i}.${key}`, $event.target.value)">
+            </div>
+            <hr>
+          </div>
+          <!-- <el-button type="success" class="button" @click="addItem" plain>新增</el-button> -->
+        </div>
+        <div v-else class="resumeField" v-for="(value, key) in resume[item.field]" :key="key">
+          <label>{{key}}</label>
+          <input type="text" :value="value" @input="changeResumeField(`${item.field}.${key}`, $event.target.value)">
+        </div>
       </li>
     </ul>
   </div>
@@ -46,50 +44,95 @@ export default {
   components: {
     ProfileEditor, ArrayEditor
   },
-  props: {
-    resume: Object
+  computed: {
+    selected: {
+      set (value) {
+        this.$store.commit('switchTab', value)
+      },
+      get () {
+        return this.$store.state.selected
+      }
+    },
+    resume () {
+      return this.$store.state.resume
+    }
+  },
+  methods: {
+    isArray (item) {
+      if (Array.isArray(item)) {
+        return true
+      }
+      return false
+    },
+    changeResumeField (path, value) {
+      this.$store.commit('updateResume', {
+        path,
+        value
+      })
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-  .iconfont{
-    font-family:"iconfont" !important;
-    font-size:16px;font-style:normal;
-    -webkit-font-smoothing: antialiased;
-    -webkit-text-stroke-width: 0.2px;
-    -moz-osx-font-smoothing: grayscale;
-  }
+<style scoped lang="scss">
+#editor {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
   nav {
-    height: 100%;
-    width: 16%;
-    background: #000;
-    ul > li {
-      padding: 16px 0;
-      text-align: center;
-      .icon{
-        width: 24px;
-        height: 24px;
-        fill: #fff;
-      }
-      &.active {
-        background: #fff;
-        > .icon {
-          fill: #000;
+    width: 80px;
+    background: black;
+    color: white;
+    ul {
+      li {
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        padding: 12px 0;
+        &.active {
+          background: white;
+            svg.icon {
+              fill: #000;
+            }
         }
       }
     }
   }
-
   .pannels {
-    overflow: auto;
-    flex: 1;
-  }
-  .pannels li {
-    display: none;
-    padding: 32px;
-    &.active {
-      display: block;
+    flex-grow: 1;
+    li {
+      padding: 24px;
     }
   }
+  svg.icon {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+  }
+}
+ul {
+  list-style: none;
+}
+.resumeField {
+  label {
+    display: block;
+  }
+  input[type=text] {
+    margin: 16px 0;
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+    width: 100%;
+    height: 40px;
+    padding: 0 8px;
+  }
+}
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 24px 0;
+}
 </style>

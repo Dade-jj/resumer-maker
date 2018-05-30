@@ -46,6 +46,9 @@ export default {
         display: flex;
         justify-content: space-between;
         width: 100%;
+        .close:hover {
+          cursor: pointer;
+        }
       }
       .slotrapper {
         padding: 20px 40px;

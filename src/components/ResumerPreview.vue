@@ -59,8 +59,10 @@
 <script>
 export default {
   name: 'ResumerPreview',
-  props: {
-    resume: Object
+  computed: {
+    resume () {
+      return this.$store.state.resume
+    }
   },
   methods: {
     filter (items) {
